@@ -1,89 +1,89 @@
-# �ڿ�����ϵͳʹ��˵��
+# 期刊爬虫系统使用说明
 
-## �ļ�˵��
+## 文件说明
 
 ### craw.py
-- **����**����ȡ֪���ڿ�����
-- **����**����Ҫ`lists.xlsx`�ڿ��б��ļ�
-- **�ص�**��
-  - �Զ�����`lists.xlsx`�����ڿ�
-  - ��ȡ��һ�����ҵ����ױ����ժҪ
-  - �Զ����浽CSV�ļ�
-  - ֧�ֶϵ�������ͨ�������ļ���¼��
+- **功能**：爬取知网期刊内容
+- **依赖**：需要`lists.xlsx`期刊列表文件
+- **特点**：
+  - 自动根据`lists.xlsx`搜索期刊
+  - 爬取近一年左右的文献标题和摘要
+  - 自动保存到CSV文件
+  - 支持断点续爬（通过进度文件记录）
 
 ### sh_try.py
-- **����**����غ������������
-- **����**����Ҫ`craw.py`��Ϊ�ӽ���
-- **�ص�**��
-  - ��Ϊ�ػ����̼��`craw.py`
-  - �ӽ����쳣�˳����Զ�����
-  - �������˳�ʱ�Զ���ֹ�ӽ���
+- **功能**：监控和重启爬虫进程
+- **依赖**：需要`craw.py`作为子进程
+- **特点**：
+  - 作为守护进程监控`craw.py`
+  - 子进程异常退出后自动重启
+  - 主进程退出时自动终止子进程
 
-## ����˵��
+## 配置说明
 
-### craw.py ������
+### craw.py 配置项
 
 ```python
-# ��־�ļ�·��
+# 日志文件路径
 LOG_FILE = 'journal_crawler.log'
 
-# �����ļ�·��
+# 进度文件路径
 PROGRESS_FILE = 'progress.txt'
 
-# �ڿ��б�Excel�ļ�·��
+# 期刊列表Excel文件路径
 JOURNAL_LIST_FILE = './lists.xlsx'
 
-# ����ļ�Ŀ¼
+# 输出文件目录
 OUTPUT_DIR = 'F:\\top\\'
 ```
 
-### sh_try.py ������
+### sh_try.py 配置项
 
 ```python
-# ���ļ�����ӡ���ݣ����û�оʹ���
-file_path = 'progress.txt'  # �����ļ�·��
+# 打开文件并打印内容，如果没有就创建
+file_path = 'progress.txt'  # 进度文件路径
 
-# conda�������ã����裩
-# conda_env_name = 'your_conda_env'  # �滻Ϊʵ�ʵĻ�����
+# conda环境配置（如需）
+# conda_env_name = 'your_conda_env'  # 替换为实际的环境名
 
-program_name = './craw.py'  # Ҫ��صĳ�����
-time_interval = 180  # ��������룩��Ĭ��3����
+program_name = './craw.py'  # 要监控的程序名
+time_interval = 180  # 检查间隔（秒），默认3分钟
 ```
 
-## ʹ��ע������
+## 使用注意事项
 
-### �ڿ��б��ļ�
-- **����ʹ��`lists.xlsx`��ʽ**  
-- **ȥ���ڿ���ǰ��������ź�����**  
-- **���滻Ϊ����Excel�ļ�**�����豣����ͬ��ʽ  
+### 期刊列表文件
+- **建议使用`lists.xlsx`格式**  
+- **去除期刊名前的特殊符号和数字**  
+- **可替换为其他Excel文件**，但需保持相同格式  
 
-### ��֤������
-- **����δ��ֲ�����֤�봦��**  
-- **������֤��ʱ����**��  
-  - ��������/IP  
-  - ������ȡƵ��  
-  - �ֶ�������֤��  
+### 验证码问题
+- **程序未充分测试验证码处理**  
+- **遇到验证码时建议**：  
+  - 更换网络/IP  
+  - 调整爬取频率  
+  - 手动处理验证码  
 
-### ���н���
-- **�ȵ�������`craw.py`**ȷ��������������  
-- **��ʹ��`sh_try.py`**�����ػ�����  
-- **����ʱ��ע����ͷģʽѡ��**  
+### 运行建议
+- **先单独测试`craw.py`**确保基本功能正常  
+- **再使用`sh_try.py`**进行守护运行,如果报告包未安装但自己知道已经装好，运行craw.py就好了或者把检测代码注释掉，效果大致一样。
+- **调试时可注释无头模式选项**  
 
-### ���̹���
-- **�ر�`sh_try.py`ʱ���Զ���ֹ�ӽ���**  
-- **�ӽ����쳣�˳���Լ3���ӻ��Զ�����**  
+### 进程管理
+- **关闭`sh_try.py`时会自动终止子进程**  
+- **子进程异常退出后约3分钟会自动重启**  
 
-## �ļ��ṹ
+## 文件结构
 
-��ĿĿ¼/
-������ craw.py                # ���������
-������ sh_try.py              # ���̼�س���
-������ lists.xlsx             # �ڿ��б��ļ�
-������ journal_crawler.log    # ��־�ļ�������ʱ���ɣ�
-������ progress.txt           # �����ļ�������ʱ���ɣ�
-������ F:/top/                # ���Ŀ¼���������ã�
-    ������ �ڿ�1.csv
-    ������ �ڿ�2.csv
-    ������ ...
+项目目录/
+│── craw.py                # 主爬虫程序
+│── sh_try.py              # 进程监控程序
+│── lists.xlsx             # 期刊列表文件
+│── journal_crawler.log    # 日志文件（运行时生成）
+│── progress.txt           # 进度文件（运行时生成）
+└── F:/top/                # 输出目录（根据配置）
+    ├── 期刊1.csv
+    ├── 期刊2.csv
+    └── ...
 
-<!-- �����ṩ��¼������� -->
+<!-- 建议提供记录运行情况 -->
