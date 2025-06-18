@@ -39,6 +39,22 @@ def check_and_install_packages():
             print(f"缺少必要的包：{package}。请运行以下命令安装：")
             print(f"pip install {package}")
 
+# Linux系统
+# def is_program_running(script_path):
+#     """
+#     检查程序是否正在运行
+#     """
+#     abs_script_path = os.path.abspath(script_path)
+#
+#     # 遍历当前所有进程
+#     for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+#         try:
+#             # 检查是否是 Python 进程，并且命令行中包含脚本路径
+#             if 'python' in proc.info['name'] and any(abs_script_path in cmd for cmd in proc.info['cmdline']):
+#                 return True
+#         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess, KeyError):
+#             pass
+#     return False
 
 # Windows系统
 def is_program_running(script_path):
@@ -121,7 +137,8 @@ def main():
                     content = file.read()  # 读取整个文件内容
                     print(f"当前进度：{content}")  # 打印文件内容
             except FileNotFoundError:
-                print(f"文件 {file_path} 未找到。")
+                with open(file_path, 'w', encoding='utf-8') as file:
+                    print("已为您创建进度文件.")
             except Exception as e:
                 print(f"发生错误: {e}")
 

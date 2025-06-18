@@ -40,7 +40,7 @@ OUTPUT_DIR = 'F:\\top\\'
 ### sh_try.py 配置项
 
 ```python
-# 打开文件并打印内容
+# 打开文件并打印内容，如果没有就创建
 file_path = 'progress.txt'  # 进度文件路径
 
 # conda环境配置（如需）
